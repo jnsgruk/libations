@@ -1,0 +1,19 @@
+[
+  {
+    "id": 7,
+    "name": "Adderly",
+    "base": ["Bourbon"],
+    "glass": ["Coup"],
+    "method": ["Shake"],
+    "ice": [],
+    "ingredients": [
+      { "name": "Orange Bitters", "measure": "1", "unit": "dash" },
+      { "name": "Lemon", "measure": "20", "unit": "ml" },
+      { "name": "Sugar", "measure": "5", "unit": "ml" },
+      { "name": "Maraschino", "measure": "15", "unit": "ml" },
+      { "name": "Bourbon", "measure": "45", "unit": "ml" }
+    ],
+    "garnish": [],
+    "notes": "I like this one, good with frozen Bourbon"
+  }
+]

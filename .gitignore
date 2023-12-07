@@ -1,0 +1,7 @@
+# Generated files by hugo
+public/
+resources/
+.hugo_build.lock
+
+# Nix build outputs
+result*

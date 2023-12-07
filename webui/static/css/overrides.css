@@ -1,0 +1,12 @@
+.p-accordion__panel {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.p-media-object__title {
+  font-size: 18px !important;
+}
+
+.p-media-object__details {
+  width: 100% !important;
+}

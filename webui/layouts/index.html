@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <title>{{ .Site.Title }}</title>
+    <meta property="og:title" content="{{ .Site.Title }}" />
+    <meta itemprop="name" content="{{ .Site.Title }}" />
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="author" content="{{ .Site.Params.author }}" />
+    <meta name="description" content="{{ .Site.Params.description }}" />
+    <meta property="og:description" content="{{ .Site.Params.description }}" />
+    <meta itemprop="description" content="{{ .Site.Params.description }}" />
+    <link href="img/logo.svg" rel="shortcut icon" />
+    <link rel="stylesheet" href="css/vanilla-framework-version-4.5.0.min.css" />
+    <link rel="stylesheet" href="css/overrides.css" />
+    <script src="js/search.js"></script>
+    <script src="js/accordion.js"></script>
+  </head>
+  <body class="l-site">
+    {{- partial "nav.html" . -}}
+    <div class="grid p-strip">
+      <div class="row">{{- partial "drinks" . -}}</div>
+    </div>
+    <footer class="l-footer--sticky p-strip--light">
+      <nav class="row" aria-label="Footer">
+        <p>
+          <small>Last updated
+            <time datetime="{{ now }}" title="{{ now }}">
+              {{- now.Format "January 2, 2006 at 15:04 MST" -}}
+            </time>
+          </small>
+        </p>
+        <ul class="p-inline-list--middot">
+          <li class="p-inline-list__item">
+            <small>Built with ♥ by <a href="https://gohugo.io">Hugo</a></small>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+    <script>
+      ;(() => {
+        initNavigationSearch()
+        initAccordions()
+      })()
+    </script>
+  </body>
+</html>
