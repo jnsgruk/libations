@@ -6,6 +6,7 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 
@@ -20,37 +21,43 @@ var (
 	hostname = flag.String("hostname", "libations", "hostname to use on the tailnet")
 )
 
-func routeHandler(w http.ResponseWriter, r *http.Request) {
-	path := fmt.Sprintf("webui/public%s", r.URL.Path)
-	if path == "webui/public/" {
-		path = "webui/public/index.html"
-	}
-
-	data, err := site.ReadFile(path)
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "File not found: %s", path)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(data)
+func redirectToTLS(w http.ResponseWriter, r *http.Request) {
+	newURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
+	http.Redirect(w, r, newURL, http.StatusMovedPermanently)
 }
 
 func main() {
 	flag.Parse()
-
-	s := new(tsnet.Server)
-	s.Hostname = *hostname
+	s := &tsnet.Server{Hostname: *hostname}
 	defer s.Close()
 
-	ln, err := s.ListenTLS("tcp", *addr)
+	// Start a standard HTTP server in the background to redirect HTTP -> HTTPS
+	go func() {
+		httpLn, err := s.Listen("tcp", ":80")
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		err = http.Serve(httpLn, http.HandlerFunc(redirectToTLS))
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}()
+
+	tlsLn, err := s.ListenTLS("tcp", *addr)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer ln.Close()
+	defer tlsLn.Close()
 
-	err = http.Serve(ln, http.HandlerFunc(routeHandler))
+	// Create an fs.FS from the embedded filesystem
+	fSys, err := fs.Sub(site, "webui/public")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Serve an HTTP file server over TLS using our embedded filesystem
+	err = http.Serve(tlsLn, http.FileServer(http.FS(fSys)))
 	if err != nil {
 		log.Fatalln(err)
 	}

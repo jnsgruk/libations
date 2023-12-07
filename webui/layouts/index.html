@@ -10,7 +10,7 @@
     <meta name="description" content="{{ .Site.Params.description }}" />
     <meta property="og:description" content="{{ .Site.Params.description }}" />
     <meta itemprop="description" content="{{ .Site.Params.description }}" />
-    <link href="img/logo.svg" rel="shortcut icon" />
+    <link href="img/logo-nav.svg" rel="shortcut icon" />
     <link rel="stylesheet" href="css/vanilla-framework-version-4.5.0.min.css" />
     <link rel="stylesheet" href="css/overrides.css" />
     <script src="js/search.js"></script>
@@ -24,7 +24,8 @@
     <footer class="l-footer--sticky p-strip--light">
       <nav class="row" aria-label="Footer">
         <p>
-          <small>Last updated
+          <small
+            >Last updated
             <time datetime="{{ now }}" title="{{ now }}">
               {{- now.Format "January 2, 2006 at 15:04 MST" -}}
             </time>
