@@ -22,6 +22,10 @@
         version = builtins.substring 0 8 self.lastModifiedDate;
       in
       {
+        overlays.default = _final: _prev: {
+          libations = self.packages.libations;
+        };
+
         packages = rec {
           libations = pkgs.buildGoModule {
             pname = "libations";
