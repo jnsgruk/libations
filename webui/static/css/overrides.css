@@ -8,5 +8,18 @@
 }
 
 .p-media-object__details {
-  width: 100% !important;
+  width: 100%;
+}
+
+.p-media-object--large {
+  margin-bottom: 0px;
+}
+.p-media-object__image {
+  padding: 1rem 0 1rem 0;
+}
+.p-media-object__content {
+  margin-top: -5px;
+}
+.p-accordion__list {
+  margin-bottom: 0;
 }
