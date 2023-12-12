@@ -79,11 +79,6 @@ represents a drink:
 ]
 ```
 
-## TODO
-
-- [ ] Implement a filter bar to filter by ingredient, method, garnish, etc.
-- [ ] Provide a means for adding/removing/editing drinks
-
 [Hugo]: https://gohugo.io
 [Go]: https://go.dev/
 [tsnet]: https://tailscale.com/kb/1244/tsnet/
