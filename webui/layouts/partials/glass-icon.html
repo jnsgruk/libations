@@ -1,33 +1,31 @@
-{{- if or (eq (index .glass 0) "12oz") (eq (index .glass 0) "12oz Lowball") (eq (index .glass 0)
-"9oz Chain Lowball") (eq (index .glass 0) "9oz Lowball") -}}
-<img src="img/lowball.svg" class="p-media-object__image" alt="" />
+{{- if or (eq (index .glass 0) "12oz") (eq (index .glass 0) "12oz Lowball") (eq (index .glass 0) "9oz Chain Lowball") (eq (index .glass 0) "9oz Lowball") -}}
+    {{- partial "icons/lowball.svg" -}} 
 {{- else if or (eq (index .glass 0) "12oz Rocks") (eq (index .glass 0) "9oz Rocks") -}}
-<img src="img/rocks.svg" class="p-media-object__image" alt="" />
-{{- else if or (eq (index .glass 0) "3oz Pousse Cafe") (eq (index .glass 0) "Pousse Cafe Glass")
--}}
-<img src="img/pousse-cafe.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/rocks.svg" -}}
+{{- else if or (eq (index .glass 0) "3oz Pousse Cafe") (eq (index .glass 0) "Pousse Cafe Glass") -}}
+    {{- partial "icons/pousse-cafe.svg" -}} 
 {{- else if eq (index .glass 0) "Bowl" -}}
-<img src="img/bowl.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/bowl.svg" -}} 
 {{- else if eq (index .glass 0) "Brandy Balloon" -}}
-<img src="img/brandy.svg" class="p-media-object__image" alt="" />
-{{- else if eq (index .glass 0) "Coup" -}}
-<img src="img/coup.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/brandy.svg" -}} 
+{{- else if eq (index .glass 0) "Coup" -}} 
+    {{- partial "icons/coup.svg" -}} 
 {{- else if eq (index .glass 0) "Flute" -}}
-<img src="img/flute.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/flute.svg" -}} 
 {{- else if eq (index .glass 0) "Highball" -}}
-<img src="img/highball.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/highball.svg" -}} 
 {{- else if eq (index .glass 0) "Hurricane" -}}
-<img src="img/hurricane.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/hurricane.svg" -}} 
 {{- else if eq (index .glass 0) "Julep Tin" -}}
-<img src="img/julep.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/julep.svg" -}} 
 {{- else if eq (index .glass 0) "Pony" -}}
-<img src="img/pony.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/pony.svg" -}} 
 {{- else if eq (index .glass 0) "Tasting Glass" -}}
-<img src="img/tasting.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/tasting.svg" -}} 
 {{- else if eq (index .glass 0) "Toddy Glass" -}}
-<img src="img/toddy.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/toddy.svg" -}} 
 {{- else if eq (index .glass 0) "Wine Glass" -}}
-<img src="img/white-wine.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/white-wine.svg" -}} 
 {{- else -}}
-<img src="img/martini.svg" class="p-media-object__image" alt="" />
+    {{- partial "icons/martini.svg" -}} 
 {{- end -}}

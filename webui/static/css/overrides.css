@@ -1,3 +1,18 @@
+:root {
+  /* Using a gradient for now, so this colour is just white, but with no opacity */
+  --icon-circle-colour: #ffffff00;
+  --icon-colour: #fff;
+  --gradient: linear-gradient(137deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
+}
+
+.p-strip {
+  padding-top: 1rem;
+}
+
+.p-navigation__tagged-logo .p-navigation__logo-tag {
+  background: var(--gradient);
+}
+
 .p-accordion__panel {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -12,14 +27,23 @@
 }
 
 .p-media-object--large {
-  margin-bottom: 0px;
+  margin-bottom: 1rem;
 }
 .p-media-object__image {
-  padding: 1rem 0 1rem 0;
+  border-radius: 100%;
+  margin-top: 1rem;
+  background: linear-gradient(137deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
 }
+
+.p-media-object--large .p-media-object__image {
+  max-height: 4rem;
+  max-width: 4rem;
+}
+
 .p-media-object__content {
-  margin-top: -5px;
+  margin-top: -0.5rem;
 }
+
 .p-accordion__list {
   margin-bottom: 0;
 }
