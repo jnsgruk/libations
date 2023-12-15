@@ -43,6 +43,13 @@ const initNavigationSearch = () => {
     })
   })
 
+  const resetButton = document.querySelector(".p-search-box__reset")
+  resetButton.addEventListener("click", () => {
+    document.querySelectorAll(".drink").forEach(r => {
+      r.style.display = ""
+    })
+  })
+
   document.querySelector(".p-search-box").addEventListener("submit", e => e.preventDefault())
 
   document.querySelector(".p-navigation__search-overlay").addEventListener("click", closeSearch)
