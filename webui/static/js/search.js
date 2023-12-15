@@ -8,6 +8,7 @@ const initNavigationSearch = () => {
     navigation.querySelectorAll(".js-search-button").forEach(searchButton => {
       searchButton.setAttribute("aria-pressed", true)
     })
+    document.querySelector(".grid.p-strip").style.marginTop = "118px"
   }
 
   const closeSearch = () => {
@@ -15,6 +16,7 @@ const initNavigationSearch = () => {
     document.querySelectorAll(".js-search-button").forEach(searchButton => {
       searchButton.removeAttribute("aria-pressed")
     })
+    document.querySelector(".grid.p-strip").style.marginTop = "48px"
   }
 
   document.querySelectorAll(".js-search-button").forEach(button => {

@@ -5,7 +5,14 @@
   --gradient: linear-gradient(137deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
 }
 
+.p-navigation {
+  position: fixed !important;
+  top: 0;
+  width: 100vw;
+}
+
 .p-strip {
+  margin-top: 48px;
   padding-top: 1rem;
 }
 
