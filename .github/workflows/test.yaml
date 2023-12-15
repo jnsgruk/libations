@@ -1,0 +1,66 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Setup magic-nix-cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+      
+      - name: Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:libations-ci
+
+      - name: Build Libations
+        run: |
+          nix build .#libations
+  
+      - name: Run Libations
+        env:
+          TS_API_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_API_CLIENT_SECRET: ${{ secrets.TS_OAUTH_SECRET }}
+        run: |
+          # Issue a new tailscale authkey for libations
+          export TS_AUTHKEY="$(go run tailscale.com/cmd/get-authkey@main -tags tag:libations-ci -ephemeral -preauth 2>/dev/null)"
+          
+          # Start Libations in the background
+          ./result/bin/libations -hostname "libations-$HOSTNAME" &>~/libations.log &
+
+          # Long timeout to allow a chance to issue HTTPs certs
+          curl --connect-timeout 30 --retry 300 --retry-delay 5 "https://libations-$HOSTNAME.tailnet-d5da.ts.net"
+          curl --connect-timeout 30 --retry 300 --retry-delay 5 "http://libations-$HOSTNAME.tailnet-d5da.ts.net"
+
+      - name: Dump Libations logs
+        run: |
+          cat ~/libations.log
+      
+      - name: Remove libations from tsnet
+        env:
+          TS_CLIENT: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_SECRET: ${{ secrets.TS_OAUTH_SECRET }}
+        run: |
+          id="$(tailscale status --json | jq -r --arg ts "libations-$HOSTNAME" '.Peer[] | select(.HostName==$ts) | .ID')"
+          token="$(curl -s -d "client_id=$TS_CLIENT" -d "client_secret=$TS_SECRET" "https://api.tailscale.com/api/v2/oauth/token" | jq -r '.access_token')"
+
+          curl -s -u "${token}:" -X DELETE "https://api.tailscale.com/api/v2/device/${id}"
