@@ -43,5 +43,7 @@ const initNavigationSearch = () => {
     })
   })
 
+  document.querySelector(".p-search-box").addEventListener("submit", e => e.preventDefault())
+
   document.querySelector(".p-navigation__search-overlay").addEventListener("click", closeSearch)
 }
