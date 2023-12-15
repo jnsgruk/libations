@@ -7,8 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    name: Test
+  test-tsnet:
+    name: Test (tsnet)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -64,3 +64,36 @@ jobs:
           token="$(curl -s -d "client_id=$TS_CLIENT" -d "client_secret=$TS_SECRET" "https://api.tailscale.com/api/v2/oauth/token" | jq -r '.access_token')"
 
           curl -s -u "${token}:" -X DELETE "https://api.tailscale.com/api/v2/device/${id}"
+
+  test-local:
+    name: Test (local)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Setup magic-nix-cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+
+      - name: Build Libations
+        run: |
+          nix build .#libations
+  
+      - name: Run Libations
+        run: |
+          # Start Libations in the background
+          ./result/bin/libations -hostname "libations-$HOSTNAME" -local -addr=":8081" &>~/libations.log &
+
+          curl --connect-timeout 30 --retry 300 --retry-delay 5 "http://localhost:8081"
+
+      - name: Dump Libations logs
+        run: |
+          cat ~/libations.log
