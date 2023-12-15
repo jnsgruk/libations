@@ -1,12 +1,11 @@
 # Libations
 
 This is a simple static website for hosting cocktail recipes. The actual site is built using [Hugo]
-and served over Tailscale (using [tsnet]) by a simple Go binary that embeds the page. The page is
-designed to be viewed on a mobile - it works _okay_ on bigger screens, but I've not yet made that
-look "right".
+and served by default over Tailscale (using [tsnet]) by a simple Go binary that embeds the page.
+The page is designed to be viewed on a mobile - it works _okay_ on bigger screens, but I've not yet
+made that look "right".
 
 The page is styled with the excellent [Vanilla Framework], because that's what I had to hand.
-Despite appearances, this site has nothing to do with [Canonical] 😉.
 
 Cocktail recipes are served up from a JSON file containing the recipes. The format is listed in a
 section below. There is an example [included](./webui/data/drinks.json).
@@ -16,6 +15,21 @@ section below. There is an example [included](./webui/data/drinks.json).
 </p>
 
 ## Usage
+
+### Command line flags
+
+```
+./libations -help
+Usage of /bin/libations:
+  -addr string
+        the address to listen on in the case of a local listener (default ":8080")
+  -hostname string
+        hostname to use on the tailnet (default "libations")
+  -local
+        start on local addr; don't attach to a tailnet
+  -tsnet-logs
+        include tsnet logs in application logs (default true)
+```
 
 ### Using Nix
 
