@@ -72,7 +72,7 @@ func parseTemplates() *template.Template {
 	return tmpl
 }
 
-// parseRecipes attempts to read and parse recipes either from a path specifed at the CLI,
+// parseRecipes attempts to read and parse recipes either from a path specified at the CLI,
 // or the default set of recipes included in the embedded filesystem.
 func parseRecipes() ([]Drink, error) {
 	var err error
@@ -121,40 +121,23 @@ func libationsMux(drinks []Drink, files fs.FS, templates *template.Template) *ht
 	return mux
 }
 
-// redirectToTLS is a simple http hander that redirects all HTTP requests to HTTPs.
-func redirectToTLS(w http.ResponseWriter, r *http.Request) {
-	newURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
-	http.Redirect(w, r, newURL, http.StatusMovedPermanently)
-}
-
-// serveLocal sets up a local TCP listener on the specified addr, and then serves the embedded
-// site over HTTP on the given listener.
-func serveLocal(drinks []Drink, files fs.FS, addr string) {
+// localListener sets up a local TCP listener on the specified addr.
+func localListener(drinks []Drink, files fs.FS, addr string) (*net.Listener, error) {
 	a, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
 
-	httpLn, err := net.ListenTCP("tcp", a)
+	httpLn, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1%s", a))
 	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
 
-	slog.Info(fmt.Sprintf("started HTTP listener on %s", addr))
-
-	tmpl := parseTemplates()
-	mux := libationsMux(drinks, files, tmpl)
-
-	if err = http.Serve(httpLn, mux); err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
-	}
+	return &httpLn, nil
 }
 
-// serveTailscale sets up HTTP(s) listeners on the tailnet and serves the embedded site on them.
-func serveTailscale(drinks []Drink, files fs.FS) {
+// tailscaleListener sets up HTTP(s) listeners on the tailnet.
+func tailscaleListener(drinks []Drink, files fs.FS) (*net.Listener, error) {
 	tsLogger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{}))
 
 	tsnetServer := &tsnet.Server{
@@ -164,52 +147,41 @@ func serveTailscale(drinks []Drink, files fs.FS) {
 			l.Info(fmt.Sprintf(msg, args...))
 		},
 	}
-	defer tsnetServer.Close()
 
 	if !*tsnetLogs {
 		tsnetServer.Logf = func(string, ...any) {}
 		slog.Warn("tsnet logs are disabled, interactive auth link will not be shown")
 	}
 
-	// Start a standard HTTP server in the background to redirect HTTP -> HTTPS
+	// Start a standard HTTP server in the background to redirect HTTP -> HTTPS.
 	go func() {
 		httpLn, err := tsnetServer.Listen("tcp", ":80")
 		if err != nil {
-			slog.Error(err.Error())
-			os.Exit(1)
+			slog.Error("unable to start HTTP listener, redirects from http->https will not work")
+			return
 		}
 
 		slog.Info(fmt.Sprintf("started HTTP listener with tsnet at %s:80", *hostname))
 
-		err = http.Serve(httpLn, http.HandlerFunc(redirectToTLS))
+		err = http.Serve(httpLn, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			newURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
+			http.Redirect(w, r, newURL, http.StatusMovedPermanently)
+		}))
 		if err != nil {
-			slog.Error(err.Error())
-			os.Exit(1)
+			slog.Error("unable to start http server, redirects from http->https will not work")
 		}
 	}()
 
 	tlsLn, err := tsnetServer.ListenTLS("tcp", ":443")
 	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
-	defer tlsLn.Close()
 
-	slog.Info(fmt.Sprintf("started HTTPS listener with tsnet at %s:443", *hostname))
-
-	tmpl := parseTemplates()
-	mux := libationsMux(drinks, files, tmpl)
-
-	if err = http.Serve(tlsLn, mux); err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
-	}
+	return &tlsLn, nil
 }
 
 func main() {
 	flag.Parse()
-
-	// Configure the default logger
 	log := slog.Default().With(slog.String("source", "libations"))
 	slog.SetDefault(log)
 
@@ -226,9 +198,23 @@ func main() {
 		os.Exit(1)
 	}
 
+	var listener *net.Listener
 	if *local {
-		serveLocal(drinks, files, *addr)
+		listener, err = localListener(drinks, files, *addr)
 	} else {
-		serveTailscale(drinks, files)
+		listener, err = tailscaleListener(drinks, files)
+	}
+
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+
+	tmpl := parseTemplates()
+	mux := libationsMux(drinks, files, tmpl)
+
+	slog.Info(fmt.Sprintf("starting listener on %s", *addr))
+	if err = http.Serve(*listener, mux); err != nil {
+		slog.Error(err.Error())
 	}
 }
