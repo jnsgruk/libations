@@ -19,7 +19,9 @@ import (
 
 var (
 	//go:embed static
-	site embed.FS
+	staticFS embed.FS
+	//go:embed templates
+	templateFS embed.FS
 
 	hostname    = flag.String("hostname", "libations", "hostname to use on the tailnet")
 	tsnetLogs   = flag.Bool("tsnet-logs", true, "include tsnet logs in application logs")
@@ -54,20 +56,19 @@ type LibationsPageData struct {
 	Drinks []Drink
 }
 
-// parseTemplates is used to parse templates from various directories, and ensure that the
+// parseTemplates is used to parse templates from the embedded FS, and ensure that the
 // 'StringJoin' function is available to the templates.
 func parseTemplates() *template.Template {
-	funcMap := template.FuncMap{"StringsJoin": strings.Join}
-	tmpl := template.New("").Funcs(funcMap)
-	globs := []string{"templates/*.html", "templates/icons/*.svg"}
-
-	// Iterate over each of the globbed paths, adding templates.
-	for _, g := range globs {
-		if t, _ := tmpl.ParseGlob(g); t != nil {
-			tmpl = t
-		}
+	// Create an fs.FS from the embedded filesystem
+	files, err := fs.Sub(templateFS, "templates")
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 
+	funcMap := template.FuncMap{"StringsJoin": strings.Join}
+	tmpl := template.New("").Funcs(funcMap)
+	tmpl, _ = tmpl.ParseFS(files, "*.html", "icons/*.svg")
 	return tmpl
 }
 
@@ -85,7 +86,7 @@ func parseRecipes() ([]Drink, error) {
 
 		slog.Info(fmt.Sprintf("using recipes file at: %s", *recipesFile))
 	} else {
-		if recipesFileContent, err = site.ReadFile("static/sample.json"); err != nil {
+		if recipesFileContent, err = staticFS.ReadFile("static/sample.json"); err != nil {
 			return nil, err
 		}
 
@@ -95,6 +96,8 @@ func parseRecipes() ([]Drink, error) {
 	if err = json.Unmarshal(recipesFileContent, &recipes); err != nil {
 		return nil, err
 	}
+
+	slog.Info(fmt.Sprintf("loaded %d recipes", len(recipes)))
 
 	return recipes, nil
 }
@@ -211,7 +214,7 @@ func main() {
 	slog.SetDefault(log)
 
 	// Create an fs.FS from the embedded filesystem
-	files, err := fs.Sub(site, "static")
+	files, err := fs.Sub(staticFS, "static")
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
