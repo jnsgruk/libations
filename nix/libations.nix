@@ -1,5 +1,4 @@
 { buildGoModule
-, hugo
 , lastModifiedDate
 , lib
 , ...
@@ -13,6 +12,4 @@ buildGoModule {
   inherit version;
   src = lib.cleanSource ../.;
   vendorHash = "sha256-Ep3nBl9WZm7skk1cmMS9KI019ZSRSxofbLs2Nrj6HM8=";
-  nativeBuildInputs = [ hugo ];
-  postConfigure = "go generate";
 }

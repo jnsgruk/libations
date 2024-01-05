@@ -7,6 +7,16 @@ in
     services.libations = {
       enable = lib.mkEnableOption "Enables the libations service";
 
+      recipesFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/var/lib/libations/recipes.json";
+        description = lib.mdDoc ''
+          A file containing drinks recipes per the Libations file format.
+          See https://github.com/jnsgruk/libations.
+        '';
+      };
+
       tailscaleKeyFile = lib.mkOption {
         type = lib.types.nullOr lib.types.path;
         default = null;
@@ -31,7 +41,7 @@ in
       };
       serviceConfig = {
         DynamicUser = true;
-        ExecStart = "${cfg.package}/bin/libations";
+        ExecStart = "${cfg.package}/bin/libations -recipes-file ${cfg.recipesFile}";
         Restart = "always";
         EnvironmentFile = cfg.tailscaleKeyFile;
         StateDirectory = "libations";
