@@ -1,6 +1,6 @@
 # Libations
 
-This is a simple static website for hosting cocktail recipes. The actual site is built using [Hugo]
+This is a simple static website for hosting cocktail recipes. The actual site is rendered with Go templates
 and served by default over Tailscale (using [tsnet]) by a simple Go binary that embeds the page.
 The page is designed to be viewed on a mobile - it works _okay_ on bigger screens, but I've not yet
 made that look "right".
@@ -27,6 +27,8 @@ Usage of /bin/libations:
         hostname to use on the tailnet (default "libations")
   -local
         start on local addr; don't attach to a tailnet
+  -recipes-file string
+        path to a file containing drink recipes
   -tsnet-logs
         include tsnet logs in application logs (default true)
 ```
@@ -43,32 +45,24 @@ nix run .#libations
 
 ### Otherwise...
 
-Before building you must have [Hugo], and [Go] installed.
+Before building you must have [Go] installed.
 
 ```bash
 git clone git@github.com:jnsgruk/libations
 
-# Build the static site with Hugo
-go generate
-
 # Optional - if not provided you'll be prompted
 export TS_AUTHKEY="tskey-auth-aBcdEfghIjKlMnOpQrStUvWxYz"
 
-# Run the application
+# Run the application on the tailnet
 go run main.go
-```
 
-For iterating on the web interface, it can be quicker to just use Hugo:
-
-```bash
-cd webui
-
-hugo serve --minify
+# Or run the application locally (handy for development)
+go run main.go -local
 ```
 
 ## Recipe File Format
 
-The [drinks.json](./webui/data/drinks.json) file is a list of JSON objects, where each object
+The [drinks.json](./static/sample.json) file is a list of JSON objects, where each object
 represents a drink:
 
 ```json
@@ -93,7 +87,6 @@ represents a drink:
 ]
 ```
 
-[Hugo]: https://gohugo.io
 [Go]: https://go.dev/
 [tsnet]: https://tailscale.com/kb/1244/tsnet/
 [Vanilla Framework]: https://vanillaframework.io
