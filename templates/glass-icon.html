@@ -1,0 +1,31 @@
+{{- if or (eq (index .Glass 0) "12oz") (eq (index .Glass 0) "12oz Lowball") (eq (index .Glass 0) "9oz Chain Lowball") (eq (index .Glass 0) "9oz Lowball") -}}
+    {{- template "lowball.svg" -}} 
+{{- else if or (eq (index .Glass 0) "12oz Rocks") (eq (index .Glass 0) "9oz Rocks") -}}
+    {{- template "rocks.svg" -}}
+{{- else if or (eq (index .Glass 0) "3oz Pousse Cafe") (eq (index .Glass 0) "Pousse Cafe Glass") -}}
+    {{- template "pousse-cafe.svg" -}} 
+{{- else if eq (index .Glass 0) "Bowl" -}}
+    {{- template "bowl.svg" -}} 
+{{- else if eq (index .Glass 0) "Brandy Balloon" -}}
+    {{- template "brandy.svg" -}} 
+{{- else if eq (index .Glass 0) "Coup" -}} 
+    {{- template "coup.svg" -}} 
+{{- else if eq (index .Glass 0) "Flute" -}}
+    {{- template "flute.svg" -}} 
+{{- else if eq (index .Glass 0) "Highball" -}}
+    {{- template "highball.svg" -}} 
+{{- else if eq (index .Glass 0) "Hurricane" -}}
+    {{- template "hurricane.svg" -}} 
+{{- else if eq (index .Glass 0) "Julep Tin" -}}
+    {{- template "julep.svg" -}} 
+{{- else if eq (index .Glass 0) "Pony" -}}
+    {{- template "pony.svg" -}} 
+{{- else if eq (index .Glass 0) "Tasting Glass" -}}
+    {{- template "tasting.svg" -}} 
+{{- else if eq (index .Glass 0) "Toddy Glass" -}}
+    {{- template "toddy.svg" -}} 
+{{- else if eq (index .Glass 0) "Wine Glass" -}}
+    {{- template "white-wine.svg" -}} 
+{{- else -}}
+    {{- template "martini.svg" -}} 
+{{- end -}}

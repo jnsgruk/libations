@@ -1,0 +1,56 @@
+{{- range .Drinks -}}
+<div class="drink">
+  <div class="p-media-object--large" data-drink-name="{{- .Name -}}">
+    {{- template "glass-icon.html" . -}} 
+    <div class="p-media-object__details">
+      <h2 class="p-media-object__title">{{ .Name }}</h3>
+      <p class="p-media-object__content">{{ StringsJoin .Base ", " }}</p>
+    </div>
+    <div class="u-vertically-center">
+      <button 
+        id="accordion-{{- .ID -}}-tab"
+        class="p-button--base u-toggle is-dense drink-expand-button"
+        type="button"
+        aria-controls="accordion-{{- .ID -}}"
+        aria-expanded="false"
+      >
+        <i class="button-icon p-icon--chevron-down"></i>
+      </button>
+    </div>
+  </div>
+  <aside class="p-accordion" >
+    <ul class="p-accordion__list">
+      <li class="p-accordion__group">
+        <section class="p-accordion__panel" id="accordion-{{- .ID -}}" aria-hidden="true">
+          <p><strong>Method:</strong> {{ StringsJoin .Method ", " }}</p>
+          {{ if len .Ice }}
+          <p><strong>Ice:</strong> {{ StringsJoin .Ice ", " }}</p>
+          {{- end -}}
+    
+          {{- if len .Garnish -}}
+          <p><strong>Garnish:</strong> {{ StringsJoin .Garnish ", " }}</p>
+          {{- end -}} {{- if .Notes -}}
+          <p><strong>Notes:</strong> {{ .Notes }}</p>
+          {{- end -}}
+          
+          <table>
+            <thead>
+              <th>Measure</th>
+              <th>Name</th>
+            </thead>
+            <tbody>
+              {{- range .Ingredients -}}
+              <tr>
+                <td>{{ .Measure }} {{ .Unit }}</td>
+                <td>{{ .Name }}</td>
+              </tr>
+              {{- end -}}
+            </tbody>
+          </table>
+          </p>
+        </section>
+      </li>
+    </ul>
+  </aside>
+</div>
+{{- end -}}

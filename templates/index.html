@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <title>Libations</title>
+    <meta property="og:title" content="Libations" />
+    <meta itemprop="name" content="Libations" />
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="author" content="Jon Seager" />
+    <meta name="description" content="A home for your cocktail recipes." />
+    <meta property="og:description" content="A home for your cocktail recipes." />
+    <meta itemprop="description" content="A home for your cocktail recipes." />
+    <link rel="stylesheet" href="static/css/vanilla-framework-version-4.5.0.min.css" />
+    <link rel="stylesheet" href="static/css/overrides.css" />
+    <script src="static/js/search.js"></script>
+    <script src="static/js/accordion.js"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png" />
+    <link rel="manifest" href="static/site.webmanifest" />
+    <link rel="mask-icon" href="static/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#2b5797" />
+    <meta name="theme-color" content="#ffffff" />
+  </head>
+  <body class="l-site">
+    {{- template "nav.html" -}}
+    <div class="grid p-strip">
+      <div class="row">{{- template "drinks.html" . -}}</div>
+    </div>
+    <footer class="l-footer--sticky p-strip--light">
+      <nav class="row" aria-label="Footer">
+        <p>
+          <small
+            >Last updated
+            <time datetime="{{ .Time }}" title="{{ .Time }}"> {{- .Time -}}</time>
+          </small>
+        </p>
+        <ul class="p-inline-list--middot">
+          <li class="p-inline-list__item">
+            <small>Built with ♥ by <a href="https://gohugo.io">Hugo</a></small>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+    <script>
+      ;(() => {
+        initNavigationSearch()
+        initAccordions()
+      })()
+    </script>
+  </body>
+</html>
