@@ -21,20 +21,19 @@
       });
     in
     {
-      overlays.default = _final: _prev: {
-        inherit (self.packages) libations;
-      };
-
-      packages = forAllSystems (system:
+      overlays.default = _final: prev:
         let
-          pkgs = pkgsForSystem system;
-          inherit (pkgs) buildGoModule callPackage hugo lib;
+          inherit (prev) buildGoModule callPackage lib;
           inherit (self) lastModifiedDate;
         in
-        rec {
-          default = libations;
-          libations = callPackage ./nix/libations.nix { inherit buildGoModule hugo lastModifiedDate lib; };
-        });
+        {
+          libations = callPackage ./nix/libations.nix { inherit buildGoModule lastModifiedDate lib; };
+        };
+
+      packages = forAllSystems (system: rec {
+        inherit (pkgsForSystem system) libations;
+        default = libations;
+      });
 
       nixosModules = rec {
         default = libations;
@@ -54,7 +53,6 @@
               go-tools
               gofumpt
               gopls
-              hugo
               zsh
             ];
             shellHook = "exec zsh";
