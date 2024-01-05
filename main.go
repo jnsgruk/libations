@@ -23,11 +23,11 @@ var (
 	//go:embed templates
 	templateFS embed.FS
 
-	hostname    = flag.String("hostname", "libations", "hostname to use on the tailnet")
-	tsnetLogs   = flag.Bool("tsnet-logs", true, "include tsnet logs in application logs")
-	local       = flag.Bool("local", false, "start on local addr; don't attach to a tailnet")
 	addr        = flag.String("addr", ":8080", "the address to listen on in the case of a local listener")
+	hostname    = flag.String("hostname", "libations", "hostname to use on the tailnet")
+	local       = flag.Bool("local", false, "start on local addr; don't attach to a tailnet")
 	recipesFile = flag.String("recipes-file", "", "path to a file containing drink recipes")
+	tsnetLogs   = flag.Bool("tsnet-logs", true, "include tsnet logs in application logs")
 )
 
 // Ingredient represents the name and quantity of a given ingredient in a recipe.
