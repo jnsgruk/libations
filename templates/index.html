@@ -10,7 +10,7 @@
     <meta name="description" content="A home for your cocktail recipes." />
     <meta property="og:description" content="A home for your cocktail recipes." />
     <meta itemprop="description" content="A home for your cocktail recipes." />
-    <link rel="stylesheet" href="static/css/vanilla-framework-version-4.5.0.min.css" />
+    <link rel="stylesheet" href="static/css/vanilla-framework-version-4.6.0.min.css" />
     <link rel="stylesheet" href="static/css/overrides.css" />
     <script src="static/js/search.js"></script>
     <script src="static/js/accordion.js"></script>
@@ -23,31 +23,33 @@
     <meta name="msapplication-TileColor" content="#2b5797" />
     <meta name="theme-color" content="#ffffff" />
   </head>
-  <body class="l-site">
-    {{- template "nav.html" -}}
-    <div class="grid p-strip">
-      <div class="row">{{- template "drinks.html" . -}}</div>
+  <body>
+    <div class="l-site">
+      {{- template "nav.html" -}}
+      <div class="grid p-strip">
+        <div class="row">{{- template "drinks.html" . -}}</div>
+      </div>
+      <footer class="l-footer--sticky p-strip--light">
+        <nav class="row" aria-label="Footer">
+          <p>
+            <small
+              >Last updated
+              <time datetime="{{ .Time }}" title="{{ .Time }}"> {{- .Time -}}</time>
+            </small>
+          </p>
+          <ul class="p-inline-list--middot">
+            <li class="p-inline-list__item">
+              <small>Built with ♥ by <a href="https://jnsgr.uk">jnsgruk</a></small>
+            </li>
+          </ul>
+        </nav>
+      </footer>
+      <script>
+        ;(() => {
+          initNavigationSearch()
+          initAccordions()
+        })()
+      </script>
     </div>
-    <footer class="l-footer--sticky p-strip--light">
-      <nav class="row" aria-label="Footer">
-        <p>
-          <small
-            >Last updated
-            <time datetime="{{ .Time }}" title="{{ .Time }}"> {{- .Time -}}</time>
-          </small>
-        </p>
-        <ul class="p-inline-list--middot">
-          <li class="p-inline-list__item">
-            <small>Built with ♥ by <a href="https://jnsgr.uk">jnsgruk</a></small>
-          </li>
-        </ul>
-      </nav>
-    </footer>
-    <script>
-      ;(() => {
-        initNavigationSearch()
-        initAccordions()
-      })()
-    </script>
   </body>
 </html>
