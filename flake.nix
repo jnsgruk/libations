@@ -2,13 +2,10 @@
   description = "libations - a web app for viewing cocktail recipes";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    formatters.url = "github:Gerschtli/nix-formatter-pack";
-    formatters.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     { self
-    , formatters
     , nixpkgs
     , ...
     }:
@@ -58,17 +55,6 @@
             shellHook = "exec zsh";
           };
         });
-
-      formatter = forAllSystems (system:
-        formatters.lib.mkFormatter {
-          pkgs = pkgsForSystem system;
-          config.tools = {
-            deadnix.enable = true;
-            nixpkgs-fmt.enable = true;
-            statix.enable = true;
-          };
-        }
-      );
     };
 }
 
