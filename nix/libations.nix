@@ -1,13 +1,14 @@
-{ buildGoModule
-, lastModifiedDate
-, lib
-, ...
+{
+  buildGo122Module,
+  lastModifiedDate,
+  lib,
+  ...
 }:
 
 let
   version = builtins.substring 0 8 lastModifiedDate;
 in
-buildGoModule {
+buildGo122Module {
   pname = "libations";
   inherit version;
   src = lib.cleanSource ../.;
