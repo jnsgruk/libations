@@ -192,7 +192,7 @@ func main() {
 	// Create an fs.FS from the embedded filesystem
 	files, err := fs.Sub(staticFS, "static")
 	if err != nil {
-		log.Error(err.Error())
+		slog.Error(err.Error())
 		os.Exit(1)
 	}
 
