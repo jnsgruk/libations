@@ -115,7 +115,11 @@ func libationsMux(drinks []Drink, files fs.FS, templates *template.Template) *ht
 			Time:   time.Now().Format("January 2, 2006 at 15:04 MST"),
 			Drinks: drinks,
 		}
-		templates.Lookup("index.html").Execute(w, data)
+
+		err := templates.Lookup("index.html").Execute(w, data)
+		if err != nil {
+			slog.Error("failed to execute template 'index.html'", "error", err.Error())
+		}
 	})
 
 	return mux
