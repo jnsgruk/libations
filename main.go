@@ -22,12 +22,6 @@ var (
 	staticFS embed.FS
 	//go:embed templates
 	templateFS embed.FS
-
-	addr        = flag.String("addr", ":8080", "the address to listen on in the case of a local listener")
-	hostname    = flag.String("hostname", "libations", "hostname to use on the tailnet")
-	local       = flag.Bool("local", false, "start on local addr; don't attach to a tailnet")
-	recipesFile = flag.String("recipes-file", "", "path to a file containing drink recipes")
-	tsnetLogs   = flag.Bool("tsnet-logs", true, "include tsnet logs in application logs")
 )
 
 // Ingredient represents the name and quantity of a given ingredient in a recipe.
@@ -74,17 +68,17 @@ func parseTemplates() *template.Template {
 
 // parseRecipes attempts to read and parse recipes either from a path specified at the CLI,
 // or the default set of recipes included in the embedded filesystem.
-func parseRecipes() ([]Drink, error) {
+func parseRecipes(recipesFile string) ([]Drink, error) {
 	var err error
 	var recipes []Drink
 	var recipesFileContent []byte
 
-	if *recipesFile != "" {
-		if recipesFileContent, err = os.ReadFile(*recipesFile); err != nil {
+	if recipesFile != "" {
+		if recipesFileContent, err = os.ReadFile(recipesFile); err != nil {
 			return nil, err
 		}
 
-		slog.Info(fmt.Sprintf("using recipes file at: %s", *recipesFile))
+		slog.Info(fmt.Sprintf("using recipes file at: %s", recipesFile))
 	} else {
 		if recipesFileContent, err = staticFS.ReadFile("static/sample.json"); err != nil {
 			return nil, err
@@ -103,11 +97,13 @@ func parseRecipes() ([]Drink, error) {
 }
 
 // libationsMux returns an http.ServeMux that knows to to handle the routes required for the app.
-func libationsMux(drinks []Drink, files fs.FS, templates *template.Template) *http.ServeMux {
+func libationsMux(drinks []Drink, files fs.FS) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Serve static files from our embedded filesystem using http.Fileserver
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(files))))
+
+	templates := parseTemplates()
 
 	// Render the templates with the drinks/time data.
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -141,18 +137,18 @@ func localListener(addr string) (*net.Listener, error) {
 }
 
 // tailscaleListener sets up HTTP(s) listeners on the tailnet.
-func tailscaleListener() (*net.Listener, error) {
+func tailscaleListener(hostname string, tsnetLogs bool) (*net.Listener, error) {
 	tsLogger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{}))
 
 	tsnetServer := &tsnet.Server{
-		Hostname: *hostname,
+		Hostname: hostname,
 		Logf: func(msg string, args ...any) {
-			l := tsLogger.With(slog.String("source", "tsnet"), slog.String("hostname", *hostname))
+			l := tsLogger.With(slog.String("source", "tsnet"), slog.String("hostname", hostname))
 			l.Info(fmt.Sprintf(msg, args...))
 		},
 	}
 
-	if !*tsnetLogs {
+	if !tsnetLogs {
 		tsnetServer.Logf = func(string, ...any) {}
 		slog.Warn("tsnet logs are disabled, interactive auth link will not be shown")
 	}
@@ -165,7 +161,7 @@ func tailscaleListener() (*net.Listener, error) {
 			return
 		}
 
-		slog.Info(fmt.Sprintf("started HTTP listener with tsnet at %s:80", *hostname))
+		slog.Info(fmt.Sprintf("started HTTP listener with tsnet at %s:80", hostname))
 
 		err = http.Serve(httpLn, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			newURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
@@ -185,9 +181,17 @@ func tailscaleListener() (*net.Listener, error) {
 }
 
 func main() {
-	flag.Parse()
+	// Setup logging
 	log := slog.Default().With(slog.String("source", "libations"))
 	slog.SetDefault(log)
+
+	// Parse command line flags
+	addr := flag.String("addr", ":8080", "the address to listen on in the case of a local listener")
+	hostname := flag.String("hostname", "libations", "hostname to use on the tailnet")
+	local := flag.Bool("local", false, "start on local addr; don't attach to a tailnet")
+	recipesFile := flag.String("recipes-file", "", "path to a file containing drink recipes")
+	tsnetLogs := flag.Bool("tsnet-logs", true, "include tsnet logs in application logs")
+	flag.Parse()
 
 	// Create an fs.FS from the embedded filesystem
 	files, err := fs.Sub(staticFS, "static")
@@ -196,7 +200,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	drinks, err := parseRecipes()
+	drinks, err := parseRecipes(*recipesFile)
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
@@ -206,7 +210,7 @@ func main() {
 	if *local {
 		listener, err = localListener(*addr)
 	} else {
-		listener, err = tailscaleListener()
+		listener, err = tailscaleListener(*hostname, *tsnetLogs)
 	}
 
 	if err != nil {
@@ -214,8 +218,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	tmpl := parseTemplates()
-	mux := libationsMux(drinks, files, tmpl)
+	mux := libationsMux(drinks, files)
 
 	slog.Info(fmt.Sprintf("starting listener on %s", *addr))
 	if err = http.Serve(*listener, mux); err != nil {
