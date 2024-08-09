@@ -126,7 +126,7 @@ func libationsMux(drinks []Drink, files fs.FS, templates *template.Template) *ht
 }
 
 // localListener sets up a local TCP listener on the specified addr.
-func localListener(drinks []Drink, files fs.FS, addr string) (*net.Listener, error) {
+func localListener(addr string) (*net.Listener, error) {
 	a, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
 		return nil, err
@@ -141,7 +141,7 @@ func localListener(drinks []Drink, files fs.FS, addr string) (*net.Listener, err
 }
 
 // tailscaleListener sets up HTTP(s) listeners on the tailnet.
-func tailscaleListener(drinks []Drink, files fs.FS) (*net.Listener, error) {
+func tailscaleListener() (*net.Listener, error) {
 	tsLogger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{}))
 
 	tsnetServer := &tsnet.Server{
@@ -204,9 +204,9 @@ func main() {
 
 	var listener *net.Listener
 	if *local {
-		listener, err = localListener(drinks, files, *addr)
+		listener, err = localListener(*addr)
 	} else {
-		listener, err = tailscaleListener(drinks, files)
+		listener, err = tailscaleListener()
 	}
 
 	if err != nil {
