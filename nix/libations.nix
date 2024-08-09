@@ -12,5 +12,5 @@ buildGo122Module {
   pname = "libations";
   inherit version;
   src = lib.cleanSource ../.;
-  vendorHash = "sha256-qnWiByRitZ6rvB0zbDo6Jhh5pXBHz3/+IY5fCoBAdrE=";
+  vendorHash = "sha256-AWvaHyJL7Cm+zCY/vTuTAsgLbVy6WUNfmaGbyQOzMMQ=";
 }
