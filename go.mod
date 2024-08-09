@@ -1,6 +1,6 @@
 module github.com/jnsgruk/libations
 
-go 1.22.0
+go 1.22.5
 
 require tailscale.com v1.68.1
 
