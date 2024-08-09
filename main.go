@@ -52,18 +52,22 @@ type LibationsPageData struct {
 
 // parseTemplates is used to parse templates from the embedded FS, and ensure that the
 // 'StringJoin' function is available to the templates.
-func parseTemplates() *template.Template {
+func parseTemplates() (*template.Template, error) {
 	// Create an fs.FS from the embedded filesystem
 	files, err := fs.Sub(templateFS, "templates")
 	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
 
 	funcMap := template.FuncMap{"StringsJoin": strings.Join}
 	tmpl := template.New("").Funcs(funcMap)
-	tmpl, _ = tmpl.ParseFS(files, "*.html", "icons/*.svg")
-	return tmpl
+
+	tmpl, err = tmpl.ParseFS(files, "*.html", "icons/*.svg")
+	if err != nil {
+		return nil, err
+	}
+
+	return tmpl, nil
 }
 
 // parseRecipes attempts to read and parse recipes either from a path specified at the CLI,
@@ -97,13 +101,11 @@ func parseRecipes(recipesFile string) ([]Drink, error) {
 }
 
 // libationsMux returns an http.ServeMux that knows to to handle the routes required for the app.
-func libationsMux(drinks []Drink, files fs.FS) *http.ServeMux {
+func libationsMux(drinks []Drink, files fs.FS, templates *template.Template) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Serve static files from our embedded filesystem using http.Fileserver
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(files))))
-
-	templates := parseTemplates()
 
 	// Render the templates with the drinks/time data.
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -125,12 +127,12 @@ func libationsMux(drinks []Drink, files fs.FS) *http.ServeMux {
 func localListener(addr string) (*net.Listener, error) {
 	a, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create local listener: %w", err)
 	}
 
 	httpLn, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1%s", a))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create local listener: %w", err)
 	}
 
 	return &httpLn, nil
@@ -174,7 +176,7 @@ func tailscaleListener(hostname string, tsnetLogs bool) (*net.Listener, error) {
 
 	tlsLn, err := tsnetServer.ListenTLS("tcp", ":443")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create tailscale listener: %w", err)
 	}
 
 	return &tlsLn, nil
@@ -196,13 +198,13 @@ func main() {
 	// Create an fs.FS from the embedded filesystem
 	files, err := fs.Sub(staticFS, "static")
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("failed to access static files in embedded filesystem", "error", err.Error())
 		os.Exit(1)
 	}
 
 	drinks, err := parseRecipes(*recipesFile)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("failed to parse recipes", "error", err.Error())
 		os.Exit(1)
 	}
 
@@ -212,16 +214,22 @@ func main() {
 	} else {
 		listener, err = tailscaleListener(*hostname, *tsnetLogs)
 	}
-
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("failed to create listener", "error", err.Error())
 		os.Exit(1)
 	}
 
-	mux := libationsMux(drinks, files)
+	templates, err := parseTemplates()
+	if err != nil {
+		slog.Error("failed to parse templates", "error", err.Error())
+		os.Exit(1)
+	}
 
 	slog.Info(fmt.Sprintf("starting listener on %s", *addr))
-	if err = http.Serve(*listener, mux); err != nil {
-		slog.Error(err.Error())
+
+	err = http.Serve(*listener, libationsMux(drinks, files, templates))
+	if err != nil {
+		slog.Error("failed to start http server", "error", err.Error())
+		os.Exit(1)
 	}
 }
