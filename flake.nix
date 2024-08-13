@@ -5,20 +5,20 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , ...
-    }:
+    { self, nixpkgs, ... }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
-      pkgsForSystem = system: (import nixpkgs {
-        inherit system;
-        overlays = [ self.overlays.default ];
-      });
+      pkgsForSystem =
+        system:
+        (import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+        });
     in
     {
-      overlays.default = _final: prev:
+      overlays.default =
+        _final: prev:
         let
           inherit (prev) buildGoModule callPackage lib;
           inherit (self) lastModifiedDate;
@@ -37,7 +37,8 @@
         libations = import ./nix/module.nix;
       };
 
-      devShells = forAllSystems (system:
+      devShells = forAllSystems (
+        system:
         let
           pkgs = pkgsForSystem system;
         in
@@ -54,7 +55,7 @@
             ];
             shellHook = "exec zsh";
           };
-        });
+        }
+      );
     };
 }
-
