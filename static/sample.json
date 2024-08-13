@@ -1,19 +1,172 @@
 [
   {
-    "id": 7,
-    "name": "Adderly",
-    "base": ["Bourbon"],
+    "id": 1,
+    "name": "Mezcal Margarita",
+    "base": ["Tequila", "Mezcal"],
+    "glass": ["Coup"],
+    "method": ["Shake"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Tequila Reposado", "measure": "25", "unit": "ml" },
+      { "name": "Mezcal", "measure": "25", "unit": "ml" },
+      { "name": "Cointreau", "measure": "25", "unit": "ml" },
+      { "name": "Grapefruit Juice", "measure": "75", "unit": "ml" },
+      { "name": "Lime Juice", "measure": "25", "unit": "ml" },
+      { "name": "Agave Syrup", "measure": "12.5", "unit": "ml" },
+      { "name": "Bob's Margarita Bitters", "measure": "2", "unit": "dash" }
+    ],
+    "garnish": ["Grapefruit Slice"],
+    "notes": null
+  },
+  {
+    "id": 2,
+    "name": "Grapefruit Margarita",
+    "base": ["Tequila"],
+    "glass": ["Coup"],
+    "method": ["Shake"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Tequila Blanco", "measure": "50", "unit": "ml" },
+      { "name": "Cointreau", "measure": "25", "unit": "ml" },
+      { "name": "Grapefruit Juice", "measure": "75", "unit": "ml" },
+      { "name": "Lime Juice", "measure": "25", "unit": "ml" },
+      { "name": "Agave Syrup", "measure": "12.5", "unit": "ml" },
+      { "name": "Bob's Margarita Bitters", "measure": "2", "unit": "dash" }
+    ],
+    "garnish": ["Lime Slice"],
+    "notes": null
+  },
+  {
+    "id": 3,
+    "name": "Going Out West",
+    "base": ["Rye"],
+    "glass": ["9oz Lowball"],
+    "method": ["Stir"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Rye", "measure": "25", "unit": "ml" },
+      { "name": "Mezcal", "measure": "12.5", "unit": "ml" },
+      { "name": "Averna Amaro", "measure": "12.5", "unit": "ml" },
+      { "name": "Sugar", "measure": "5", "unit": "ml" },
+      { "name": "Angostura Bitters", "measure": "2", "unit": "dash" }
+    ],
+    "garnish": ["Orange Twist"],
+    "notes": null
+  },
+  {
+    "id": 4,
+    "name": "Grapefruit & Bourbon Sidecar",
+    "base": ["Rye"],
     "glass": ["Coup"],
     "method": ["Shake"],
     "ice": [],
     "ingredients": [
-      { "name": "Orange Bitters", "measure": "1", "unit": "dash" },
-      { "name": "Lemon", "measure": "20", "unit": "ml" },
-      { "name": "Sugar", "measure": "5", "unit": "ml" },
-      { "name": "Maraschino", "measure": "15", "unit": "ml" },
-      { "name": "Bourbon", "measure": "45", "unit": "ml" }
+      { "name": "Rye", "measure": "25", "unit": "ml" },
+      { "name": "Cointreau", "measure": "12.5", "unit": "ml" },
+      { "name": "Grapefruit Juice", "measure": "75", "unit": "ml" }
+    ],
+    "garnish": [""],
+    "notes": "Mix grapefruit zest and caster sugar in 1:1 ratio and use on the rim of the glass"
+  },
+  {
+    "id": 5,
+    "name": "Sazerum (Rum Sazerac)",
+    "base": ["Rum"],
+    "glass": ["9oz Lowball"],
+    "method": ["Stir"],
+    "ice": [],
+    "ingredients": [
+      { "name": "Rum", "measure": "50", "unit": "ml" },
+      { "name": "Absinthe", "measure": "5", "unit": "ml" },
+      { "name": "Dark Agave Syrup", "measure": "7.5", "unit": "ml" },
+      { "name": "Peychaud Bitters", "measure": "2.5", "unit": "ml" },
+      { "name": "Lemon Juice", "measure": "2", "unit": "dash" }
+    ],
+    "garnish": ["Lemon Twist"],
+    "notes": "Preferred rum is Plantation XO. Chill glass before and rinse with 5ml Absinthe"
+  },
+  {
+    "id": 6,
+    "name": "Bergamot Gin Sour",
+    "base": ["Gin"],
+    "glass": ["Coup"],
+    "method": ["Shake"],
+    "ice": [],
+    "ingredients": [
+      { "name": "Gin", "measure": "50", "unit": "ml" },
+      { "name": "Bergamot Juice", "measure": "50", "unit": "ml" },
+      { "name": "Agave Syrup", "measure": "12.5", "unit": "ml" },
+      { "name": "Egg White", "measure": "12.5", "unit": "ml" },
+      { "name": "Bob's Margarita Bitters", "measure": "2", "unit": "dash" }
+    ],
+    "garnish": ["Lemon Sail"],
+    "notes": null
+  },
+  {
+    "id": 7,
+    "name": "Elderflower Collins",
+    "base": ["Gin"],
+    "glass": ["Highball"],
+    "method": ["Shake", "Stir"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Gin", "measure": "50", "unit": "ml" },
+      { "name": "Lemon Juice", "measure": "25", "unit": "ml" },
+      { "name": "Agave Syrup", "measure": "12.5", "unit": "ml" },
+      { "name": "Elderflower Liqueur", "measure": "12.5", "unit": "ml" },
+      { "name": "Soda Water", "measure": "Top", "unit": "" }
+    ],
+    "garnish": ["Lemon Wedge"],
+    "notes": "Swap soda water for prosecco if you're feeling fancy"
+  },
+  {
+    "id": 8,
+    "name": "Tequila / Mezcal Sour",
+    "base": ["Tequila", "Mezcal"],
+    "glass": ["Coup"],
+    "method": ["Shake"],
+    "ice": [],
+    "ingredients": [
+      { "name": "Tequila Blanco", "measure": "25", "unit": "ml" },
+      { "name": "Mezcal", "measure": "25", "unit": "ml" },
+      { "name": "Lime Juice", "measure": "25", "unit": "ml" },
+      { "name": "Lemon Juice", "measure": "37.5", "unit": "ml" },
+      { "name": "Agave Syrup", "measure": "12.5", "unit": "ml" },
+      { "name": "Egg White", "measure": "12.5", "unit": "ml" }
     ],
     "garnish": [],
-    "notes": "I like this one, good with frozen Bourbon"
+    "notes": null
+  },
+  {
+    "id": 9,
+    "name": "Negroni",
+    "base": ["Gin"],
+    "glass": ["9oz Lowball"],
+    "method": ["Stir"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Martini Rosso", "measure": "25", "unit": "ml" },
+      { "name": "Campari", "measure": "25", "unit": "ml" },
+      { "name": "Gin", "measure": "25", "unit": "ml" }
+    ],
+    "garnish": ["Orange Slice"],
+    "notes": null
+  },
+  {
+    "id": 10,
+    "name": "New York Sour",
+    "base": ["Bourbon"],
+    "glass": ["12oz Lowball"],
+    "method": ["Dry Shake", "Shake"],
+    "ice": ["Cubed"],
+    "ingredients": [
+      { "name": "Lemon Juice", "measure": "20", "unit": "ml" },
+      { "name": "Sugar", "measure": "20", "unit": "ml" },
+      { "name": "Red Wine", "measure": "10", "unit": "ml" },
+      { "name": "Bourbon", "measure": "40", "unit": "ml" },
+      { "name": "Egg White", "measure": "20", "unit": "ml" }
+    ],
+    "garnish": ["Lemon Sail"],
+    "notes": "Use Claret or Malbec"
   }
 ]
