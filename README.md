@@ -15,7 +15,7 @@ Cocktail recipes are served up from a JSON file containing the recipes. The form
 section below. There is an example [included](./static/sample.json).
 
 <p align="center">
-<img src=".github/screenshot.png" alt="screenshot of libations" style="max-height:500px"/>
+<img width="250px" src=".github/screenshot.png" alt="screenshot of libations"/>
 </p>
 
 ## Usage
@@ -72,21 +72,21 @@ represents a drink:
 ```json
 [
   {
-    "id": 7,
-    "name": "Adderly",
-    "base": ["Bourbon"],
-    "glass": ["Coup"],
-    "method": ["Shake"],
+    "id": 5,
+    "name": "Sazerum (Rum Sazerac)",
+    "base": ["Rum"],
+    "glass": ["9oz Lowball"],
+    "method": ["Stir"],
     "ice": [],
     "ingredients": [
-      { "name": "Orange Bitters", "measure": "1", "unit": "dash" },
-      { "name": "Lemon", "measure": "20", "unit": "ml" },
-      { "name": "Sugar", "measure": "5", "unit": "ml" },
-      { "name": "Maraschino", "measure": "15", "unit": "ml" },
-      { "name": "Bourbon", "measure": "45", "unit": "ml" }
+      { "name": "Rum", "measure": "50", "unit": "ml" },
+      { "name": "Absinthe", "measure": "5", "unit": "ml" },
+      { "name": "Dark Agave Syrup", "measure": "7.5", "unit": "ml" },
+      { "name": "Peychaud Bitters", "measure": "2.5", "unit": "ml" },
+      { "name": "Lemon Juice", "measure": "2", "unit": "dash" }
     ],
-    "garnish": [],
-    "notes": "I like this one, good with frozen Bourbon"
+    "garnish": ["Lemon Twist"],
+    "notes": "Preferred rum is Plantation XO. Chill glass before and rinse with 5ml Absinthe"
   }
 ]
 ```
