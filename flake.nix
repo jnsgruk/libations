@@ -47,7 +47,7 @@
             name = "libations";
             NIX_CONFIG = "experimental-features = nix-command flakes";
             nativeBuildInputs = with pkgs; [
-              go_1_21
+              go_1_22
               go-tools
               gofumpt
               gopls
