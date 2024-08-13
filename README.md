@@ -12,7 +12,7 @@ made that look "right".
 The page is styled with the excellent [Vanilla Framework], because that's what I had to hand.
 
 Cocktail recipes are served up from a JSON file containing the recipes. The format is listed in a
-section below. There is an example [included](./webui/data/drinks.json).
+section below. There is an example [included](./static/sample.json).
 
 <p align="center">
 <img src=".github/screenshot.png" alt="screenshot of libations" style="max-height:500px"/>
