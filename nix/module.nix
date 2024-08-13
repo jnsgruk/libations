@@ -5,38 +5,42 @@
   ...
 }:
 let
+  inherit (lib.modules) mkIf;
+  inherit (lib.options) mkEnableOption mkPackageOption mkOption;
+  inherit (lib.types) nullOr path;
+
   cfg = config.services.libations;
 in
 {
   options = {
     services.libations = {
-      enable = lib.mkEnableOption "Enables the libations service";
+      enable = mkEnableOption "Enables the libations service";
 
-      recipesFile = lib.mkOption {
-        type = lib.types.nullOr lib.types.path;
+      recipesFile = mkOption {
+        type = nullOr path;
         default = null;
         example = "/var/lib/libations/recipes.json";
-        description = lib.mdDoc ''
+        description = ''
           A file containing drinks recipes per the Libations file format.
           See https://github.com/jnsgruk/libations.
         '';
       };
 
-      tailscaleKeyFile = lib.mkOption {
-        type = lib.types.nullOr lib.types.path;
+      tailscaleKeyFile = mkOption {
+        type = nullOr path;
         default = null;
         example = "/run/agenix/libations-tsauthkey";
-        description = lib.mdDoc ''
+        description = ''
           A file containing a key for Libations to join a Tailscale network.
           See https://tailscale.com/kb/1085/auth-keys/.
         '';
       };
 
-      package = lib.mkPackageOptionMD pkgs "libations" { };
+      package = mkPackageOption pkgs "libations" { };
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
     systemd.services.libations = {
       description = "Libations cocktail recipe viewer";
       wantedBy = [ "multi-user.target" ];
