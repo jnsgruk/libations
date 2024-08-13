@@ -1,4 +1,8 @@
-# Libations
+<p align="center">
+  <img width="250px" style="clip-path: circle()" src=".github/logo.webp" alt="libations logo">
+</p>
+
+<h1 align="center">Libations</h1>
 
 This is a simple static website for hosting cocktail recipes. The actual site is rendered with Go templates
 and served by default over Tailscale (using [tsnet]) by a simple Go binary that embeds the page.
