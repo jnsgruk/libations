@@ -168,5 +168,21 @@
     ],
     "garnish": ["Lemon Sail"],
     "notes": "Use Claret or Malbec"
+  },
+  {
+    "id": 11,
+    "name": "Joséphine",
+    "base": ["Non-Alcoholic"],
+    "glass": ["Highball"],
+    "method": ["Shake", "Double Strain"],
+    "ice": ["Crushed"],
+    "ingredients": [
+      { "name": "Passionfruit", "measure": "1", "unit": "whole" },
+      { "name": "Agave Syrup", "measure": "15", "unit": "ml" },
+      { "name": "Lime Juice", "measure": "40", "unit": "ml" },
+      { "name": "Ginger Beer", "measure": "Top", "unit": "" }
+    ],
+    "garnish": [],
+    "notes": "In a shaker, combine the flesh of a whole passion fruit, agave syrup, and lime juice. Shake vigorously. Double strain into a serving glass over crushed ice. Top with ginger beer."
   }
 ]
