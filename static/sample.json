@@ -177,7 +177,7 @@
     "method": ["Shake", "Double Strain"],
     "ice": ["Crushed"],
     "ingredients": [
-      { "name": "Passion Fruit", "measure": "1", "unit": "whole" },
+      { "name": "Passionfruit", "measure": "1", "unit": "whole" },
       { "name": "Agave Syrup", "measure": "15", "unit": "ml" },
       { "name": "Lime Juice", "measure": "40", "unit": "ml" },
       { "name": "Ginger Beer", "measure": "Top", "unit": "" }
