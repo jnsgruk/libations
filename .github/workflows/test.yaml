@@ -2,13 +2,16 @@ name: Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test-tsnet:
     name: Test (tsnet)
+    # Disable this test for now. It doesn't run on PRs anyway due to not having access to
+    # the secrets.
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +27,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: "go.mod"
-      
+
       - name: Tailscale
         uses: tailscale/github-action@v3
         with:
@@ -35,7 +38,7 @@ jobs:
       - name: Build Libations
         run: |
           nix build .#libations
-  
+
       - name: Run Libations
         env:
           TS_API_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
@@ -43,7 +46,7 @@ jobs:
         run: |
           # Issue a new tailscale authkey for libations
           export TS_AUTHKEY="$(go run tailscale.com/cmd/get-authkey@main -tags tag:libations-ci -ephemeral -preauth 2>/dev/null)"
-          
+
           # Start Libations in the background
           ./result/bin/libations -hostname "libations-$HOSTNAME" &>~/libations.log &
 
@@ -54,7 +57,7 @@ jobs:
       - name: Dump Libations logs
         run: |
           cat ~/libations.log
-      
+
       - name: Remove libations from tsnet
         env:
           TS_CLIENT: ${{ secrets.TS_OAUTH_CLIENT_ID }}
@@ -86,7 +89,7 @@ jobs:
       - name: Build Libations
         run: |
           nix build .#libations
-  
+
       - name: Run Libations
         run: |
           # Start Libations in the background
