@@ -20,9 +20,6 @@ jobs:
       - name: Install nix
         uses: DeterminateSystems/nix-installer-action@v16
 
-      - name: Setup magic-nix-cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -77,9 +74,6 @@ jobs:
 
       - name: Install nix
         uses: DeterminateSystems/nix-installer-action@v16
-
-      - name: Setup magic-nix-cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Setup Go
         uses: actions/setup-go@v5

@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   go-build:
@@ -34,9 +34,6 @@ jobs:
 
       - name: Install nix
         uses: DeterminateSystems/nix-installer-action@v16
-
-      - name: Setup magic-nix-cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Build
         run: nix build .#libations
